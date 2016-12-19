@@ -1,5 +1,7 @@
 package io.lyra.oghma.common.content;
 
+import javafx.util.Pair;
+
 import java.nio.file.Path;
 import java.util.EnumSet;
 import java.util.Optional;
@@ -41,12 +43,35 @@ public enum ContentType {
         this.versioned = versioned;
     }
 
-    public static Optional<ContentType> fromFilePath(final String fileName) {
+    public static Pair<String, Integer> getExtensionAndVersion(final String fileName) {
         final int i = fileName.lastIndexOf('.');
-        if (i > 0 && fileName.length() - i >= 3) {
-            String extChars = fileName.substring(i + 1, i + 3);
+        if (i > 0 && fileName.length() - i >= 2) {
+            final String fullExtension = fileName.substring(i + 1, fileName.length());
+
+            int v = fullExtension.length();
+            boolean digits = true;
+            int version = 0;
+            String extChars = "";
+            while (--v >= 0) {
+                final char c = fullExtension.charAt(v);
+                if (digits && Character.isDigit(c)) {
+                    version += Integer.parseInt(Character.toString(c)) * (Math.pow(10, fullExtension.length() - 1 - v));
+                }
+                else {
+                    extChars = c + extChars;
+                    digits = false;
+                }
+            }
+            return new Pair<>(extChars, version);
+        }
+        return null;
+    }
+
+    public static Optional<ContentType> fromFilePath(final String fileName) {
+        final Pair<String, Integer> extensionAndVersion = getExtensionAndVersion(fileName);
+        if (extensionAndVersion != null) {
             return EnumSet.allOf(ContentType.class).stream()
-                    .filter(type -> type.getExtension().equalsIgnoreCase(extChars))
+                    .filter(type -> type.getExtension().equalsIgnoreCase(extensionAndVersion.getKey()))
                     .findFirst();
         }
         return Optional.empty();
