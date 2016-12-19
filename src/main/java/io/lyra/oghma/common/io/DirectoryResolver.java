@@ -11,6 +11,8 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 
+import static io.lyra.oghma.common.io.DirectoryConst.*;
+
 /**
  * Resolves directories and path for different content operations.
  * <p>
@@ -20,9 +22,8 @@ import java.util.List;
  */
 public class DirectoryResolver {
 
-    private static final String META_FILENAME      = "oghma-{0}.json";
-    private static final String RELEASE_FILENAME   = "oghma-{0}.jar";
-    private static final String INSTALLED_PACK_DIR = "pack/installed/";
+    private static final String META_FILENAME    = "oghma-{0}.json";
+    private static final String RELEASE_FILENAME = "oghma-{0}.jar";
 
     private final Path oghmaRoot;
 
@@ -40,20 +41,19 @@ public class DirectoryResolver {
         return new DirectoryResolver(oghmaRoot);
     }
 
-    public static Path computeOghmaRoot() {
-        final String oghmaDirName = ".oghma";
+    private static Path computeOghmaRoot() {
         final Path userHome = Paths.get(System.getProperty("user.home"));
         final String os = System.getProperty("os.name");
 
         Path oghmaRoot;
         if (os.startsWith("Windows")) {
-            oghmaRoot = userHome.resolve("AppData/Roaming/").resolve(oghmaDirName);
+            oghmaRoot = userHome.resolve("AppData/Roaming/").resolve(ROOT_DIR);
             if (!oghmaRoot.toFile().exists()) {
-                oghmaRoot = userHome.resolve(oghmaDirName);
+                oghmaRoot = userHome.resolve(ROOT_DIR);
             }
         }
         else {
-            oghmaRoot = userHome.resolve(oghmaDirName);
+            oghmaRoot = userHome.resolve(ROOT_DIR);
         }
         return oghmaRoot;
     }
@@ -80,8 +80,20 @@ public class DirectoryResolver {
         return getInstalledPath(filePath, sha256Hash).toFile().exists();
     }
 
+    public Path resolveRelativeRoot(final Path file) {
+        return getRoot().resolve(file);
+    }
+
     public Path resolveRelativeRoot(final String file) {
         return getRoot().resolve(file);
+    }
+
+    public Path getDirectory(final ContentType type) {
+        return resolve(type.getContentPath(), false);
+    }
+
+    public Path resolve(final Path file, final boolean relative) {
+        return (relative) ? file : resolveRelativeRoot(file);
     }
 
     public Path getInstalledDir() {
@@ -116,7 +128,7 @@ public class DirectoryResolver {
     }
 
     public Path getReleasesRoot() {
-        return getRoot().resolve("release/");
+        return getRoot().resolve(RELEASE_DIR);
     }
 
 
