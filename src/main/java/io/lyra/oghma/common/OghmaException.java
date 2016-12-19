@@ -15,4 +15,8 @@ public class OghmaException extends RuntimeException {
         super(message, cause);
     }
 
+    public OghmaException(final Throwable cause) {
+        super(cause);
+    }
+
 }

@@ -15,4 +15,8 @@ public class InitializationException extends OghmaException {
         super(message, cause);
     }
 
+    public InitializationException(final Throwable cause) {
+        super(cause);
+    }
+
 }
