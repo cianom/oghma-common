@@ -42,6 +42,11 @@ public interface OghmaConfig {
         }
     }
 
+    default boolean getBoolean(final ConfigOption option, final boolean defaultValue) {
+        final String value = get(option);
+        return (value == null) ? defaultValue : Boolean.valueOf(value);
+    }
+
     default UUID getInstallUUID() {
         final String installUUID = get(StandardConfigOption.INSTALL_UUID);
         return (installUUID == null) ? null : UUID.fromString(installUUID);
