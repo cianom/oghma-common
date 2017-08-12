@@ -18,8 +18,9 @@ public class DirectoryConst {
     static final        Path INSTALLED_PACK_DIR = PACK_DIR.resolve("installed");
     public static final Path RELEASE_DIR        = Paths.get("release");
 
-    public static final Path DATA_DIR     = ROOT_DIR.resolve("data");
+    public static final Path DATA_DIR     = Paths.get("data");
     public static final Path UNIVERSE_DIR = DATA_DIR.resolve("universe");
+    public static final Path LIFEFORM_DIR = DATA_DIR.resolve("lifeform");
     public static final Path SERVER_DIR   = DATA_DIR.resolve("server");
 
     public static final Path LANGUAGE_DIR = CONTENT_DIR.resolve("language");
