@@ -1,7 +1,5 @@
 package io.lyra.oghma.common.content;
 
-import javafx.util.Pair;
-
 import java.nio.file.Path;
 import java.util.EnumSet;
 import java.util.Optional;
@@ -33,8 +31,8 @@ public enum ContentType {
     PACK("op", PACK_DIR, true);
 
 
-    private final String  extension;
-    private final Path    contentPath;
+    private final String extension;
+    private final Path contentPath;
     private final boolean versioned;
 
     ContentType(final String extension, final Path contentPath, final boolean versioned) {
@@ -43,7 +41,7 @@ public enum ContentType {
         this.versioned = versioned;
     }
 
-    public static Pair<String, Integer> getExtensionAndVersion(final String fileName) {
+    public static ExtensionAndVersion getExtensionAndVersion(final String fileName) {
         final int i = fileName.lastIndexOf('.');
         if (i > 0 && fileName.length() - i >= 2) {
             final String fullExtension = fileName.substring(i + 1, fileName.length());
@@ -56,22 +54,21 @@ public enum ContentType {
                 final char c = fullExtension.charAt(v);
                 if (digits && Character.isDigit(c)) {
                     version += Integer.parseInt(Character.toString(c)) * (Math.pow(10, fullExtension.length() - 1 - v));
-                }
-                else {
+                } else {
                     extChars = c + extChars;
                     digits = false;
                 }
             }
-            return new Pair<>(extChars, version);
+            return new ExtensionAndVersion(extChars, version);
         }
         return null;
     }
 
     public static Optional<ContentType> fromFilePath(final String fileName) {
-        final Pair<String, Integer> extensionAndVersion = getExtensionAndVersion(fileName);
+        final ExtensionAndVersion extensionAndVersion = getExtensionAndVersion(fileName);
         if (extensionAndVersion != null) {
             return EnumSet.allOf(ContentType.class).stream()
-                    .filter(type -> type.getExtension().equalsIgnoreCase(extensionAndVersion.getKey()))
+                    .filter(type -> type.getExtension().equalsIgnoreCase(extensionAndVersion.extChars))
                     .findFirst();
         }
         return Optional.empty();
@@ -107,4 +104,15 @@ public enum ContentType {
         return contentPath;
     }
 
+    static class ExtensionAndVersion {
+
+        final String extChars;
+        final int version;
+
+
+        public ExtensionAndVersion(final String extChars, final int version) {
+            this.extChars = extChars;
+            this.version = version;
+        }
+    }
 }
