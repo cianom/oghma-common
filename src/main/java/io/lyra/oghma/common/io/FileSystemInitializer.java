@@ -9,10 +9,6 @@ import java.text.MessageFormat;
 
 /**
  * Ensures existence of directory structure required to download and install content.
- * <p>
- * Copyright © 2016 Cian O'Mahony. All rights reserved.
- *
- * @author Cian O'Mahony
  */
 public class FileSystemInitializer {
 

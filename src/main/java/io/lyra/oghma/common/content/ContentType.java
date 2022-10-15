@@ -9,10 +9,6 @@ import static io.lyra.oghma.common.io.DirectoryConst.*;
 /**
  * Specifies the different pack file types, the file extensions
  * they're identified by and the paths they should be extracted to.
- * <p>
- * Copyright © 2016 Cian O'Mahony. All rights reserved.
- *
- * @author Cian O'Mahony
  */
 public enum ContentType {
 

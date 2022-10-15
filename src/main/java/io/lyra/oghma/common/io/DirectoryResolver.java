@@ -15,10 +15,6 @@ import static io.lyra.oghma.common.io.DirectoryConst.*;
 
 /**
  * Resolves directories and path for different content operations.
- * <p>
- * Copyright © 2016 Cian O'Mahony. All rights reserved.
- *
- * @author Cian O'Mahony
  */
 public class DirectoryResolver {
 
